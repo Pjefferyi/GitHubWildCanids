@@ -52,10 +52,10 @@ library(sjPlot)
 # formulas and store the results and related plots in a list. 
  
 # addFreqSp: This function is used to add columns with the weekly and monthly
-# frequency of detentions for a species into a dataframe exported from Timelapse 
+# frequencies of detections for species into a dataframe exported from Timelapse 
  
 # addFrqHum: This function is used to add columns with the weekly and monthly
-# frequency of detentions for humans into a dataframe exported from Timelapse 
+# frequencies of detections for humans into a dataframe exported from Timelapse 
 
 # sample data: 
 sdata1 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/Datasets/TimelapseDataTUWall_Nsp_over0_V7.csv")
