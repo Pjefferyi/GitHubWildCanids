@@ -1,1 +1,2 @@
-the local directory of this repository is C:\Users\Jelan\OneDrive\Desktop\Courses, notes and assignments\Year4_Fall_Winter_2021\BIOD98-DirectedResearch in Biology\GitHubWildCanids
+the local directory of this repository is C:\Users\Jelan\OneDrive\Desktop\Research\Professor_Molnarr\Canid_temporal_segregation_manuscript\GitHubWildCanids
+

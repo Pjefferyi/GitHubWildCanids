@@ -9,7 +9,7 @@ library(overlap)
 library(maptools)
 library(sp)
 library(scales)
-library(anytime) # used to force the conversion to POSIXct for times that do not exist due to daylight savings. 
+library(anytime)  
 library(ggpubr)
 library(survival) 
 library(survminer)
@@ -18,16 +18,44 @@ library(sjPlot)
 
 ## List of functions ===========================================================
 
-# controlInterval 
-# overlapPlotCI
-# overlapCI
-# overlapPlotST
-# overapPlotGrid 
-# getTimes
-# mergeLayers
-# coxModel
-# addFreqSp
-# addFrqHum
+# controlInterval: This function sets a minimum time interval between successive
+# camera trap images. Used to ensure the images are temporally independent. 
+ 
+# overlapPlotCI: used to create customized overlap plots for the diel activity 
+# of two species. This function is built using functions from the Overlap package.  
+
+# overlapCI: Used to obtain the confidence interval for the overlap coefficient
+# of the activity of two species. Built using functions form the overlap package. 
+
+# overlapPlotST: This function creates overlap plots similar to those of 
+# the OverlapPlotCI function, but uses the standard plot desgin of the overlap 
+# package. 
+
+# overapPlotGrid: This function creates a grid of overlap plots built using the 
+# OverlapPlotCI fucntion 
+ 
+# getTimes: For a given pair of species (sp1 and sp2) and a .csv file exported
+# from Timelapse, this function creates a new dataframe with three new columns.
+# This dataframe only includes rows for images of sp1. The Time_diff column 
+# shows the time between the observation of sp1 and the next observation of sp1 
+# or sp2 by the camera.The Next_sp column shows whether sp1 and sp2 was detected 
+# after sp1. The Censor column shows whether the time interval between the two 
+# observations is censored or not (1 indicates not censored, 0 indicates 
+# censored). All rows where sp1 was detected after sp1 are censored. 
+ 
+# mergeLayers: This function will merge the information from a dataframe with 
+# spatial data and a dataframe obtained with getTimes or imported from 
+# Timelapse. The name of the camera trapping site (ine the RelativePath column)
+# is used as the key for the merge. 
+ 
+# coxModel: function to run cox proportional hazard models using character 
+# formulas and store the results and related plots in a list. 
+ 
+# addFreqSp: This function is used to add columns with the weekly and monthly
+# frequency of detentions for a species into a dataframe exported from Timelapse 
+ 
+# addFrqHum: This function is used to add columns with the weekly and monthly
+# frequency of detentions for humans into a dataframe exported from Timelapse 
 
 ## Function to remove images within a time interval ============================
 
@@ -46,7 +74,7 @@ controlInterval <- function(data,lim, keep = c()){
   
 ## Test call ===================================================================
 
-  # data = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
+  # data = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
   # x <- controlInterval(data, 10)
   # x <- controlInterval(data, 15, keep = c("fox","dog", "coyote"))
 
@@ -116,12 +144,13 @@ overlapPlotCI <- function(sp1, sp2, data, grid = 100, nb = 1000, cam = c(),
   # title: adds a title to the plot when TRUE 
   # legend: adds a legend to the plot when TRUE
 
-  # This function uses sun time. The location is set to toronto, Ontario, Canada by default
+  # This function uses sun time. The location is set to a single point in 
+  # Toronto, Ontario, Canada by default
   # The function will not work for cameras that captured less than 2 individuals of a given species
   
 ## Test call====================================================================
   
-  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
+  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
   # overlapPlotCI(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 1000, type = 1)
   # overlapPlotCI(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 1000, type = 2)
   # overlapPlotCI(sp1 = "dog", sp2 = "fox", data = x, grid = 100, nb = 1000, type = 1, cam = c("TUW28"))
@@ -319,7 +348,7 @@ overlapCI <- function(sp1, sp2, data, nb = 1000, ci= 0.95, cam = c(), samp = FAL
   
 ## Test call ===================================================================
   
-  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
+  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
   # overlapCI("fox", "coyote", x, nb = 1000, ci= 0.95, cam = c("TUW28"))
   # overlapCI("fox", "coyote", x, nb = 1000, ci= 0.95, cam = c("TUW28"), samp = TRUE)
   # overlapCI("fox", "coyote", x, nb = 1000, ci= 0.95, cam = c("TUW28", "TUW27"))
@@ -404,7 +433,7 @@ overlapPlotST <- function(sp1, sp2, data, cam = "") {
   
   ## Test call====================================================================
   
-  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V5.csv")
+  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V5.csv")
   # overlapPlotST(sp1 = "fox", sp2 = "coyote", x, cam = "TUW28") 
   # overlapPlotST(sp1 = "fox", sp2 = "coyote", x, cam = "TUW27")
   
@@ -472,13 +501,13 @@ overlapPlotGrid <- function(sp1, sp2, data, grid, nb, cams = c()){
 # nb: number of bootstrap samples 
 # cams: specify the cameras to include in the plot grid 
   
-# This function uses sun time. The location is set to toronto, Ontario, Canada by default
+# This function uses sun time. The location is set to Toronto, Ontario,
+# Canada by default
 
 
 ## Test call====================================================================
 
-  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V2.csv")
-  
+  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V2.csv")
   # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 500, cams = c("TUW11", "TUW1", "TUW4", "TUW09", "TUW09b"))
   # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 500, cams = c("TUW36", "TUW36b", "TUW37", "TUW37b", "TUW35a", "TUW35b", "TUW34", "TUW10", "TUW13", "TUW14"))
   # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 500, cams = c("TUW27", "TUW29b", "TUW28", "TUW25", "TUW24", "TUW23", "TUW19"))
@@ -492,7 +521,7 @@ overlapPlotGrid <- function(sp1, sp2, data, grid, nb, cams = c()){
     
     plot = overlapPlotCI(sp1, sp2, data = x, grid, nb, type = 1, cam = c(i), title = FALSE, legend = FALSE)
     
-    if (class(plot) != "character"){ 
+  if (class(plot)[1] != "character"){ 
     
     plot_list[[n]] <- plot  
     n = n + 1  
@@ -513,8 +542,9 @@ getTimes <- function(sp1, sp2, data, interval = 0, rcens = NA, rtrunc = NA, excl
 # sp2: second species in the pair
 # interval: minimum interval (minutes) between detections of each species
 # data: dataframe obtained by importing .csv file generated with Timelapse
-# rcen: maximum time-to-encounter (hours) at which observations will be right censored 
-# excludecen: if true, censor values are not included in the output dataset 
+# rcens: maximum time-to-encounter (hours) at which observations will be right censored
+# rtrunc: maximum time-toe-encounter (hours) at which images will be excluded from the dataset 
+# excludecen: if true, censored values are not included in the output dataset 
 
   
 # This function returns a dataframe with a new column, the time difference 
@@ -530,7 +560,7 @@ getTimes <- function(sp1, sp2, data, interval = 0, rcens = NA, rtrunc = NA, excl
   
 ## Test call====================================================================
 
-# x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V3.csv")
+# x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V3.csv")
 # times <- getTimes("coyote", "fox", x, 10, rcens  = 168)
 # times <- getTimes("coyote", "fox", x, 10, rtrunc = 168)
 # times <- getTimes("dog", "fox", x, 10, rtrunc = 10)
@@ -632,8 +662,8 @@ mergeLayers <- function(data1, data2){
 
 ## Test call====================================================================
 
-  # data1 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V2.csv")
-  # data2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/Layers/AllCameras_AllBuffers_500B.csv")
+  # data1 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V2.csv")
+  # data2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/Layers/AllCameras_AllBuffers_500B.csv")
   # mData <- mergeLayers(data1, data2) 
 
 ## Function body =============================================================== 
@@ -660,11 +690,11 @@ coxModel <- function(moddata, formula, m.null = FALSE){
   
   ## Test call====================================================================
   
-  # x <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V5.csv")
+  # x <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V5.csv")
   # data <- getTimes("dog", "coyote", x, 20, rtrunc = 48)
   # data1 <- data1[(data1$RelativePath %in% c("TUW19", "TUW26", "TUW28")),]
   # data1 <-  filter(data1, DateTime < anytime("2021-05-01 00:00:00"))
-  # data2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/Layers/AllCameras_AllBuffers_500B.csv")
+  # data2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/Layers/AllCameras_AllBuffers_500B.csv")
   # mData <- mergeLayers(data1, data2)
   
   # mData$Built_PA <- as.numeric(mData$Built_PA)
@@ -746,50 +776,55 @@ addFreqSp <- function(data, sp){
 
   ## Test call====================================================================
   
-  # x <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
+  # x <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
   # outputdf <- addFreqSp(x, c("fox", "coyote", "dog"))
 
   ## Function body =============================================================== 
   
+  # Add an index column for weeks
   data$WeekIndex <- strftime(data$DateTime, format = "%Y-W%V")
   
+  #Add an index column for months 
   data$MonthIndex <- strftime(data$DateTime, format = "%Y-%m")
   
+  #calculate the frequencies of observations of each species per week 
   Weekdf <-  data %>% 
     group_by(Species, RelativePath, WeekIndex) %>%
     summarise(Nspecies = sum(Nspecies)) %>%
+    #add rows with zeroes for when the species is not detected 
     complete(WeekIndex = data$WeekIndex, fill = list(Nspecies = 0))
   
   Weekdf <- data.frame(Weekdf)
   rename(Weekdf, WeekFreq = WeekIndex)
   
+  #calculate the frequencies of observations of each species per month
   Monthdf <- data %>% 
     group_by(Species, RelativePath, MonthIndex) %>%
     summarise(Nspecies = sum(Nspecies)) %>%
+    #add rows with zeroes for when the species is not detected 
     complete(MonthIndex = data$MonthIndex, fill = list(Nspecies = 0))
   
   Monthdf <- data.frame(Monthdf)
   rename(Monthdf, MonthFreq = MonthIndex)
   
+  # for each species for which the weekly and monthly frequency was calculated,
+  # merge columns with its monthly and weekly frequencies into the main 
+  # dataset and rename them accordingly. 
+  
   for (i in 1:length(sp)){
     
-    Weekfreqs <- Weekdf[(Weekdf == sp[i]),] 
-    data_temp <- merge(data, Weekfreqs, by = c("RelativePath", "WeekIndex"), all.x = TRUE)
-    
-    weekcolname <- paste("WeekFreq", sp[i], sep ="")
-    
-    data_temp <- arrange(data_temp, DateTime)
-    data <- arrange(data, DateTime)
-    
-    data[weekcolname] <- data_temp$Nspecies.y
-    
-    
+    #get all monthly and weekly frequencies and index for one species 
     Weekfreqs <- Weekdf[(Weekdf == sp[i]),] 
     Monthfreqs <- Monthdf[(Monthdf == sp[i]),]
     
+    #merge the new columns to the main dataset using the weekly/monthly index 
+    #column as the key
     temp1 <- merge(data, Weekfreqs, by = c("RelativePath", "WeekIndex"), all.x = TRUE)
     temp2 <- merge(data, Monthfreqs, by = c("RelativePath", "MonthIndex"), all.x = TRUE)
     
+  
+    #create and assign column names for the new column that contain the name of
+    #the species whose frquency has been calculated  
     weekcolname <- paste("WeekFreq", sp[i], sep ="")
     monthcolname <- paste("MonthFreq", sp[i], sep ="")
     
@@ -857,8 +892,6 @@ addFreqHum <- function(spdf, humdf, lim){
   
   ##renumber rows
   rownames(humdf2) <- NULL
-  
-  #adding human frequencies
   
   # convert the human entries (which contains only "true") to 1 for summation
   humdf2$humans <- 1
