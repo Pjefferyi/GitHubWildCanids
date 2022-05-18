@@ -57,6 +57,10 @@ library(sjPlot)
 # addFrqHum: This function is used to add columns with the weekly and monthly
 # frequency of detentions for humans into a dataframe exported from Timelapse 
 
+# sample data: 
+sdata1 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/Datasets/TimelapseDataTUWall_Nsp_over0_V7.csv")
+sdata2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/Datasets/AllCameras_SpatialData_500mbuffer.csv")
+
 ## Function to remove images within a time interval ============================
 
 controlInterval <- function(data,lim, keep = c()){
@@ -74,9 +78,8 @@ controlInterval <- function(data,lim, keep = c()){
   
 ## Test call ===================================================================
 
-  # data = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
-  # x <- controlInterval(data, 10)
-  # x <- controlInterval(data, 15, keep = c("fox","dog", "coyote"))
+    # x <- controlInterval(sdata1, 10)
+  # x <- controlInterval(sdata1, 15, keep = c("fox","dog", "coyote"))
 
 ## Function body ===============================================================  
 
@@ -150,10 +153,9 @@ overlapPlotCI <- function(sp1, sp2, data, grid = 100, nb = 1000, cam = c(),
   
 ## Test call====================================================================
   
-  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
-  # overlapPlotCI(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 1000, type = 1)
-  # overlapPlotCI(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 1000, type = 2)
-  # overlapPlotCI(sp1 = "dog", sp2 = "fox", data = x, grid = 100, nb = 1000, type = 1, cam = c("TUW28"))
+    # overlapPlotCI(sp1 = "fox", sp2 = "coyote", data = sdata1, grid = 100, nb = 1000, type = 1)
+  # overlapPlotCI(sp1 = "fox", sp2 = "coyote", data = sdata1, grid = 100, nb = 1000, type = 2)
+  # overlapPlotCI(sp1 = "dog", sp2 = "fox", data = sdata1, grid = 100, nb = 1000, type = 1, cam = c("TUW28"))
   
 ## Function body ===============================================================  
   
@@ -348,10 +350,9 @@ overlapCI <- function(sp1, sp2, data, nb = 1000, ci= 0.95, cam = c(), samp = FAL
   
 ## Test call ===================================================================
   
-  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
-  # overlapCI("fox", "coyote", x, nb = 1000, ci= 0.95, cam = c("TUW28"))
-  # overlapCI("fox", "coyote", x, nb = 1000, ci= 0.95, cam = c("TUW28"), samp = TRUE)
-  # overlapCI("fox", "coyote", x, nb = 1000, ci= 0.95, cam = c("TUW28", "TUW27"))
+   # overlapCI("fox", "coyote", sdata1, nb = 1000, ci= 0.95, cam = c("TUW28"))
+  # overlapCI("fox", "coyote", sdata1, nb = 1000, ci= 0.95, cam = c("TUW28"), samp = TRUE)
+  # overlapCI("fox", "coyote", sdata1, nb = 1000, ci= 0.95, cam = c("TUW28", "TUW27"))
   
   # This function uses sun time. The location is set to Toronto, Ontario, Canada by default
 
@@ -433,9 +434,8 @@ overlapPlotST <- function(sp1, sp2, data, cam = "") {
   
   ## Test call====================================================================
   
-  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V5.csv")
-  # overlapPlotST(sp1 = "fox", sp2 = "coyote", x, cam = "TUW28") 
-  # overlapPlotST(sp1 = "fox", sp2 = "coyote", x, cam = "TUW27")
+   # overlapPlotST(sp1 = "fox", sp2 = "coyote", sdata1, cam = "TUW28") 
+  # overlapPlotST(sp1 = "fox", sp2 = "coyote", sdata1, cam = "TUW27")
   
   ## Function body ===============================================================  
   
@@ -507,10 +507,9 @@ overlapPlotGrid <- function(sp1, sp2, data, grid, nb, cams = c()){
 
 ## Test call====================================================================
 
-  # x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V2.csv")
-  # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 500, cams = c("TUW11", "TUW1", "TUW4", "TUW09", "TUW09b"))
-  # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 500, cams = c("TUW36", "TUW36b", "TUW37", "TUW37b", "TUW35a", "TUW35b", "TUW34", "TUW10", "TUW13", "TUW14"))
-  # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = x, grid = 100, nb = 500, cams = c("TUW27", "TUW29b", "TUW28", "TUW25", "TUW24", "TUW23", "TUW19"))
+  # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = sdata1, grid = 100, nb = 500, cams = c("TUW11", "TUW1", "TUW4", "TUW09", "TUW09b"))
+  # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = sdata1, grid = 100, nb = 500, cams = c("TUW36", "TUW36b", "TUW37", "TUW37b", "TUW35a", "TUW35b", "TUW34", "TUW10", "TUW13", "TUW14"))
+  # overlapPlotGrid(sp1 = "fox", sp2 = "coyote", data = sdata1, grid = 100, nb = 500, cams = c("TUW27", "TUW29b", "TUW28", "TUW25", "TUW24", "TUW23", "TUW19"))
   
 ## Function body ===============================================================  
 
@@ -560,12 +559,11 @@ getTimes <- function(sp1, sp2, data, interval = 0, rcens = NA, rtrunc = NA, excl
   
 ## Test call====================================================================
 
-# x = read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V3.csv")
-# times <- getTimes("coyote", "fox", x, 10, rcens  = 168)
-# times <- getTimes("coyote", "fox", x, 10, rtrunc = 168)
-# times <- getTimes("dog", "fox", x, 10, rtrunc = 10)
-# times <- getTimes("dog", "fox", x, 10, rtrunc = 168, excludecen = TRUE)
-# times <- getTimes("dog", "fox", x, 20, rtrunc = 168)
+# times <- getTimes("coyote", "fox", sdata1, 10, rcens  = 168)
+# times <- getTimes("coyote", "fox", sdata1, 10, rtrunc = 168)
+# times <- getTimes("dog", "fox", sdata1, 10, rtrunc = 10)
+# times <- getTimes("dog", "fox", sdata1, 10, rtrunc = 168, excludecen = TRUE)
+# times <- getTimes("dog", "fox", sdata1, 20, rtrunc = 168)
   
 ## Function body ===============================================================  
 
@@ -662,9 +660,9 @@ mergeLayers <- function(data1, data2){
 
 ## Test call====================================================================
 
-  # data1 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V2.csv")
-  # data2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/Layers/AllCameras_AllBuffers_500B.csv")
-  # mData <- mergeLayers(data1, data2) 
+  # data1 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/GitHubWildCanids/Datasets/TimelapseDataTUWall_Nsp_over0_V7.csv")
+  # data2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/GitHubWildCanids/Datasets/AllCameras_SpatialData_500mbuffer.csv")
+  # mData <- mergeLayers(sdata1, sdata2) 
 
 ## Function body =============================================================== 
 
@@ -690,12 +688,10 @@ coxModel <- function(moddata, formula, m.null = FALSE){
   
   ## Test call====================================================================
   
-  # x <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V5.csv")
-  # data <- getTimes("dog", "coyote", x, 20, rtrunc = 48)
-  # data1 <- data1[(data1$RelativePath %in% c("TUW19", "TUW26", "TUW28")),]
-  # data1 <-  filter(data1, DateTime < anytime("2021-05-01 00:00:00"))
-  # data2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/Layers/AllCameras_AllBuffers_500B.csv")
-  # mData <- mergeLayers(data1, data2)
+  # sdata3 <- getTimes("dog", "coyote", sdata1, 20, rtrunc = 48)
+  # sdata3 <- data1[(data1$RelativePath %in% c("TUW19", "TUW26", "TUW28")),]
+  # sdata3 <-  filter(data1, DateTime < anytime("2021-05-01 00:00:00"))
+  # mData <- mergeLayers(sdata3, sdata2)
   
   # mData$Built_PA <- as.numeric(mData$Built_PA)
   # mData$Tree_PA <- as.numeric(mData$Tree_PA)
@@ -776,8 +772,7 @@ addFreqSp <- function(data, sp){
 
   ## Test call====================================================================
   
-  # x <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Year4_Fall_Winter_2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
-  # outputdf <- addFreqSp(x, c("fox", "coyote", "dog"))
+  # outputdf <- addFreqSp(sdata1, c("fox", "coyote", "dog"))
 
   ## Function body =============================================================== 
   
@@ -854,9 +849,8 @@ addFreqHum <- function(spdf, humdf, lim){
   
   ## Test call====================================================================
   
-  # Humans <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseData_all_images_v2.csv")
-  # Species <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
-  
+  # Humans <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/Datasets/TimelapseData_all_imagesleaned.csv")
+  # Species <- sdata1
   # outputdf <- addFreqHum(Species, Humans , 0.5)
   
   ## Function body =============================================================== 

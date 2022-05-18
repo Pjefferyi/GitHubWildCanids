@@ -11,12 +11,11 @@ library(circular)
 
 #====================== constructing the dataset ==============================
 # Load data
-spatialdata <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/Layers/AllCameras_AllBuffers_500B.csv")
-humanobs <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseData_all_images_v2.csv")
-spobs <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/2022_full/TimelapseData_2021_Combined.csv")
-#spobs <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_Nsp_over0_V7.csv")
+spatialdata <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/GitHubWildCanids/Datasets/AllCameras_SpatialData_500mbuffer.csv")
+humanobs <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/GitHubWildCanids/Datasets/TimelapseData_all_images_v2.csv")
+spobs <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/GitHubWildCanids/Datasets/TimelapseDataTUWall_Nsp_over0_V7.csv")
 
-# subset to get only sites and period of interest
+# subset to get only sites and period of interest for this study
 spobs <- spobs[(spobs$RelativePath %in% c("TUW28", "TUW26", "TUW19")),]
 spobs <-  filter(spobs, DateTime < anytime("2021-05-01 00:00:00"))
 spobs <-  filter(spobs, DateTime > anytime("2020-09-30 23:59:59"))
@@ -54,13 +53,11 @@ drop <- c("X.1","ImageQuality", "DeleteFlag", "melanistic", "mange",
           "y", "x", "status", "ORIG_FID", "SHAPE_Area", "SHAPE_Length" )
 spobs <- spobs[, !(names(spobs) %in% drop)]
 
-write.csv(spobs, "C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_WaitTimeDataset.csv" )
+write.csv(spobs, "C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/GitHubWildCanids/Datasets/TimelapseDataTUWall_WaitTimeDataset.csv")
 
 #======================  Cox proportional hazard models ========================
 # load dataset 
-dataset <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_WaitTimeDataset.csv")
-dataset2 <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Courses, notes and assignments/Fourth Year Fall 2021/BIOD98-DirectedResearch in Biology/ImageDataExports/TimelapseDataTUWall_WaitTimeDataset2.csv")
-
+dataset <- read.csv("C:/Users/Jelan/OneDrive/Desktop/Research/Professor_Molnar/Canid_temporal_segregation_manuscript/GitHubWildCanids/Datasets/TimelapseDataTUWall_WaitTimeDataset.csv")
 
 #commands for model info:"km.plot", "km.model", "c.model", "c.sum", "c.linplot",
 #"c.proptest", "c.propplot", "c.devres", "c.AIC", "c.dev"
@@ -175,32 +172,6 @@ mod_tablecd <- model.sel(list(modcd1$c.model, modcd2$c.model, modcd3$c.model, mo
                               modcd17$c.model, modcd18$c.model, modcd19$c.model,
                               modcdnull$c.model))
 
-#========== Test significance of overlap coefficient ===========================
-
-# Create samples for the detection data 
-T28fox <- dataset[((dataset$Species == "fox") & (dataset$RelativePath == "TUW28")),]$SunTime
-T26fox <- dataset[((dataset$Species == "fox") & (dataset$RelativePath == "TUW26")),]$SunTime
-T28coy <- dataset[((dataset$Species == "coyote") & (dataset$RelativePath == "TUW28")),]$SunTime
-T26coy <- dataset[((dataset$Species == "coyote") & (dataset$RelativePath == "TUW26")),]$SunTime
-T28dog <- dataset[((dataset$Species == "dog") & (dataset$RelativePath == "TUW28")),]$SunTime
-T26dog <- dataset[((dataset$Species == "dog") & (dataset$RelativePath == "TUW26")),]$SunTime
-
-T28foxdogoverlap <- overlapEst(T28fox, T28dog, type =  "Dhat4") 
-T26foxdogoverlap <- overlapEst(T26fox, T26dog, type =  "Dhat4") 
-T28foxdog <- bootstrap(T28fox, T28dog, 1000, type = "Dhat4")
-T26foxdog <- bootstrap(T26fox, T26dog, 1000, type = "Dhat4")
-
-T28foxdogCI <- bootCI(T28foxdogoverlap, T28foxdog, 0.84)
-T26foxdogCI <- bootCI(T26foxdogoverlap, T28foxdog, 0.84)
-
-T28coydogoverlap <- overlapEst(T28coy, T28dog, type =  "Dhat4") 
-T26coydogoverlap <- overlapEst(T26coy, T26dog, type =  "Dhat4") 
-T28coydog <- bootstrap(T28coy, T28dog, 1000, type = "Dhat4")
-T26coydog <- bootstrap(T26coy, T26dog, 1000, type = "Dhat4")
-
-T28coydogCI <- bootCI(T28coydogoverlap, T28coydog, 0.84)
-T26coydogCI <- bootCI(T26coydogoverlap, T28coydog, 0.84)
-
 #========================== hazard ratio Plots   ===============================
 modsp <- coxModel(alltimes, "Surv(Time_diff, Censor) ~ Species")
 
@@ -253,25 +224,8 @@ Sim3 <- coxsimLinear(modcd9$c.model, b = "Built_PA",
 simGG(Sim3, xlab = "", ylab = "", pcolour = "black", lcolour = "black") + font_size(axis_title.x = 18, axis_title.y = 18, labels.x = 16, labels.y = 16, base.theme = theme_classic())
 
 
-
 Sim4 <- coxsimLinear(modcd9$c.model, b = "WeekFreqdog", 
                      qi = "Hazard Rate", ci = 0.95,
                      Xj = seq(0,300, by = 20), spin = TRUE)
 
 simGG(Sim4, xlab = "", ylab = "", pcolour = "black", lcolour = "black") + font_size(axis_title.x = 18, axis_title.y = 18, labels.x = 16, labels.y = 16, base.theme = theme_classic())
-
-
-#====================== model diagnostics ======================================
-
-#Plots of the continuous explanatory variable against martingale residuals of null cox proportional hazards model
-ggcoxfunctional(modfd8$c.model, data = datafoxdog, ylim = c(-1,1)) 
-
-#residuals by type
-ggcoxdiagnostics(modfd5$c.model, type = "deviance",
-                 linear.predictions = FALSE, ggtheme = theme_bw())
-
-#test for hazard proportionality 
-ggcoxzph(cox.zph(modcd14$c.model))
-plot(cox.zph(modcd14$c.model)[1])
-
-model.avg(list(modcd6$c.model, modcd13$c.model, modcd8$c.model, modcd2$c.model))
